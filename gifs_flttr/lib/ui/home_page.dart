@@ -29,24 +29,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void initState(){
-    super.initState();
-
-    _getGifs().then((map){
-      print(map);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Image.network("https://developers.giphy.com/static/img/dev-logo-lg.7404c00322a8.gif"),
         centerTitle: true,
       ),
+
       backgroundColor: Colors.black,
+
       body: Column(
+
         children: <Widget>[
           Padding(
             padding: EdgeInsets.all(10.0),
