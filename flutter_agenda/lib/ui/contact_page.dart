@@ -29,6 +29,9 @@ class _ContactPageState extends State<ContactPage> {
       _editContact = new Contact();
     }else{
       _editContact = Contact.fromMap(widget.contact.toMap());
+      _nameController.text = _editContact.name;
+      _emailController.text = _editContact.email;
+      _phoneController.text = _editContact.phone;
     }
   }
 
@@ -64,6 +67,7 @@ class _ContactPageState extends State<ContactPage> {
               ),
             ),
             TextField(
+              controller: _nameController,
               decoration: InputDecoration(labelText: "Nome"),
               onChanged: (text){
                 _userEdit = true;
@@ -73,6 +77,7 @@ class _ContactPageState extends State<ContactPage> {
               },
             ),
             TextField(
+              controller: _emailController,
               decoration: InputDecoration(labelText: "Email"),
               onChanged: (text){
                 _userEdit = true;
@@ -81,6 +86,7 @@ class _ContactPageState extends State<ContactPage> {
               keyboardType: TextInputType.emailAddress,
             ),
             TextField(
+              controller: _phoneController,
               decoration: InputDecoration(labelText: "Telefone"),
               onChanged: (text){
                 _userEdit = true;
