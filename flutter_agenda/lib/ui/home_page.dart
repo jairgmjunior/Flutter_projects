@@ -20,15 +20,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _getAllContacts();
   }
-
-  void _getAllContacts(){
-    helper.getAllContacts().then((list){
-      setState(() {
-        contacts = list;
-      });
-    });
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,12 +101,12 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       onTap: (){
-        _showContactPage(contact: contact);
+        _showOptions(context, contact);
       },
     );
   }
 
-  //parametro opcional
+  //{}parametro opcional
   void _showContactPage({Contact contact}) async {
     final recContact = await Navigator.push(
         context,
@@ -128,5 +120,72 @@ class _HomePageState extends State<HomePage> {
     }
 
     _getAllContacts();
+  }
+
+  void _getAllContacts(){
+    helper.getAllContacts().then((list){
+      setState(() {
+        contacts = list;
+      });
+    });
+  }
+  
+  void _showOptions(BuildContext context, Contact contact){
+    showModalBottomSheet(
+        context: context,
+        builder: (context){
+          return BottomSheet(
+            onClosing: (){},
+            builder: (context){
+              return Container(
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: FlatButton(
+                        child: Text("Ligar",
+                          style: TextStyle(color: Colors.green, fontSize: 20.0),
+                        ),
+                        onPressed: (){
+
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: FlatButton(
+                        child: Text("Editar",
+                          style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
+                        ),
+                        onPressed: (){
+                          Navigator.pop(context);
+                          _showContactPage(contact: contact);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: FlatButton(
+                        child: Text("Excluir",
+                          style: TextStyle(color: Colors.redAccent, fontSize: 20.0),
+                        ),
+                        onPressed: (){
+                          helper.deleteContact(contact.id);
+                          setState(() {
+                            contacts.remove(contact);
+                            Navigator.pop(context);
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+    );
   }
 }
