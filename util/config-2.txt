@@ -1,0 +1,28 @@
+Versões dos Plugins
+
+Atenção: Não crie o seu projeto com o package name padrão (com.example...) 
+pois o firebase não irá aceitar! Coloque um nome personalizado, assim como eu faço: br.com.ciolfi.chat, 
+substituindo o ciolfi pelo seu sobrenome!
+
+As versões recomendadas para este app são:
+
+pubspec.yaml:
+
+    cloud_firestore: ^0.12.9
+    google_sign_in: ^4.0.4
+    firebase_auth: ^0.14.0
+    firebase_storage: ^3.0.4
+    image_picker: ^0.6.1
+
+build.gradle:
+
+    classpath 'com.android.tools.build:gradle:3.3.0'
+    classpath 'com.google.gms:google-services:4.3.0'
+
+Guarde-as que logo você irá utilizá-las!
+
+Além disso, é necessário migrar seu projeto para o AndroidX. Pra fazer isso, 
+siga as instruções da aula chamada Migrar para o AndroidX da última seção.
+
+Mas atenção: caso não utilize as versões sugeridas acima, há o risco do seu app não funcionar, 
+e nesse caso não conseguiremos te ajudar. Por isso, utilize as versões sugeridas.

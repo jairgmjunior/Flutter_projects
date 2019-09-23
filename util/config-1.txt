@@ -1,0 +1,53 @@
+Migrar para o AndroidX
+
+O Android agora utiliza um novo sistema de bibliotecas de compatibilidade, chamada AndroidX.
+
+Pode ser que seja necessário habilitar o AndroidX no seu projeto, devido à necessidade de alguns plugins. 
+Pra fazer isso, basta seguir os seguintes passos:
+
+    No arquivo android/gradle/wrapper/gradle-wrapper.properties troque a linha que começa com distributionUrl 
+    desta forma (pode ser que no seu projeto já esteja da forma correta):
+
+        distributionUrl=https\://services.gradle.org/distributions/gradle-4.10.2-all.zip
+
+    No arquivo android/build.gradle, troque:
+
+        dependencies {
+            classpath 'com.android.tools.build:gradle:3.2.1'
+        }
+
+    por
+
+        dependencies {
+            classpath 'com.android.tools.build:gradle:3.3.0'
+        }
+
+    No arquivo android/gradle.properties, adicione as seguintes linhas:
+
+        android.enableJetifier=true
+        android.useAndroidX=true
+
+    No arquivo android/app/build.gradle:
+
+    Dentro de android {, certifique-se de que o seu compileSdkVersion e targetSdkVersion estão com o valor 28.
+
+    No arquivo android/app/build.gradle, substitua a linha
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    por
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    Finalmente, dentro de dependencies {, substitua as linhas
+
+
+        androidTestImplementation 'com.android.support.test:runner:1.0.2'
+        androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    por
+
+        androidTestImplementation 'androidx.test:runner:1.1.1'
+        androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
+    Agora, basta rodar novamente o projeto e continuar com as aulas!
