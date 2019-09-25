@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() async {
   runApp(MyApp());
@@ -53,7 +57,8 @@ void _sendMessage({String text, String imgUrl}){
       "text" : text,
       "imgUrl" : imgUrl,
       "sendName" : googleSignIn.currentUser.displayName,
-      "sendPhotoUrl" : googleSignIn.currentUser.photoUrl
+      "sendPhotoUrl" : googleSignIn.currentUser.photoUrl,
+      "sendDate": new DateTime.now().toIso8601String()
     }
   );
 }
@@ -91,12 +96,26 @@ class _ChatScreamState extends State<ChatScream> {
         body: Column(
           children: <Widget>[
             Expanded(
-              child: ListView(
-                children: <Widget>[
-                  ChatMessage(),
-                  ChatMessage(),
-                  ChatMessage(),
-                ],
+              child: StreamBuilder(
+                stream: Firestore.instance.collection("messages").orderBy("sendDate").snapshots(),
+                builder: (context, snapshot){
+                  switch(snapshot.connectionState){
+                    case ConnectionState.none:
+                    case ConnectionState.waiting:
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    default:
+                      return ListView.builder(
+                          reverse: true,
+                          itemCount: snapshot.data.documents.length,
+                          itemBuilder: (context, index){
+                            List reverse = snapshot.data.documents.reversed.toList();
+                            return ChatMessage(reverse[index].data);
+                          }
+                      );
+                  }
+                },
               ),
             ),
             Divider(
@@ -149,7 +168,16 @@ class _TextComposerState extends State<TextComposer> {
             Container(
               child: IconButton(
                 icon: Icon(Icons.photo_camera),
-                onPressed: (){},
+                onPressed: () async {
+                  await _ensureLoggedIn();
+                  File imgFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+                  if(imgFile == null) return;
+                  StorageUploadTask task = FirebaseStorage.instance.ref().child(googleSignIn.currentUser.id.toString() +
+                      DateTime.now().millisecondsSinceEpoch.toString()).putFile(imgFile);
+                  StorageTaskSnapshot taskSnapshot = await task.onComplete;
+                  String url = await taskSnapshot.ref.getDownloadURL();
+                  _sendMessage(imgUrl: url);
+                },
               ),
             ),
             Expanded(
@@ -197,6 +225,11 @@ class _TextComposerState extends State<TextComposer> {
 }
 
 class ChatMessage extends StatelessWidget {
+
+  final Map<String, dynamic> data;
+
+  ChatMessage(this.data);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -207,19 +240,21 @@ class ChatMessage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(right: 16.0),
             child: CircleAvatar(
-              backgroundImage: NetworkImage("https://qodebrisbane.com/wp-content/uploads/2019/02/This-is-not-a-person-2-1.jpeg"),
+              backgroundImage: NetworkImage(data["sendPhotoUrl"])
             ),
           ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text("Usuario",
+                Text(data["sendName"],
                   style: Theme.of(context).textTheme.subhead
                 ),
                 Container(
                   margin: const EdgeInsets.only(top:5.0),
-                  child: Text("teste"),
+                  child: data["imgUrl"] != null ?
+                  Image.network(data["imgUrl"], width: 250.0,) :
+                      Text(data["text"])
                 )
               ],
             ),
