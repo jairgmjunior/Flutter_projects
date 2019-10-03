@@ -63,13 +63,15 @@ Migrar para o AndroidX
 
 O Android agora utiliza um novo sistema de bibliotecas de compatibilidade, chamada AndroidX.
 
-Pode ser que seja necessário habilitar o AndroidX no seu projeto, devido à necessidade de alguns plugins. Pra fazer isso, basta seguir os seguintes passos:
+Pode ser que seja necessário habilitar o AndroidX no seu projeto, devido à necessidade de alguns plugins. 
+Pra fazer isso, basta seguir os seguintes passos:
 
     No arquivo android/build.gradle
 	Atualize a versão kotlin para:
 	ext.kotlin_version = '1.3.0'
 
-    No arquivo android/gradle/wrapper/gradle-wrapper.properties troque a linha que começa com distributionUrl desta forma (pode ser que no seu projeto já esteja da forma correta):
+    No arquivo android/gradle/wrapper/gradle-wrapper.properties 
+    troque a linha que começa com distributionUrl desta forma (pode ser que no seu projeto já esteja da forma correta):
 
         distributionUrl=https\://services.gradle.org/distributions/gradle-4.10.2-all.zip
 
