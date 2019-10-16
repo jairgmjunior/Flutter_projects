@@ -30,7 +30,7 @@ class CustomDrawer extends StatelessWidget {
       ),
     );
 
-    Widget _menu() => Positioned(
+    Widget _linkInvite() => Positioned(
       left: 0.0,
       bottom: 0.0,
       child: Column(
@@ -67,7 +67,7 @@ class CustomDrawer extends StatelessWidget {
                 child: Stack(
                   children: <Widget>[
                     _title(),
-                    _menu(),
+                    _linkInvite(),
                   ],
                 ),
               ),
